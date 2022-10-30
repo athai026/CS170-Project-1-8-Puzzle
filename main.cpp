@@ -64,12 +64,12 @@ int main() {
     else if (choice == 2) {
         newPuzzle.misplaced(pq, visited);
     }
-    // else if (choice == 3) {
-    //     newPuzzle.manhattan(pq, visited);
-    // }
-    // else {
-    //     cout << "Invalid choice" << endl;
-    // }
+    else if (choice == 3) {
+        newPuzzle.manhattan(pq, visited);
+    }
+    else {
+        cout << "Invalid choice" << endl;
+    }
 
     // npuzzle test;
     // cout << "testing queue pop" << endl;

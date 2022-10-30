@@ -68,6 +68,9 @@ void npuzzle::go_right(int choice) {
     if (choice == 2) {
         hCost = find_misplaced();
     }
+    else if (choice == 3) {
+        hCost = manhattan_distance();
+    }
 
     fCost = calc_fCost();
 }
@@ -82,6 +85,9 @@ void npuzzle::go_left(int choice) {
 
     if (choice == 2) {
         hCost = find_misplaced();
+    }
+    else if (choice == 3) {
+        hCost = manhattan_distance();
     }
 
     fCost = calc_fCost();
@@ -98,6 +104,9 @@ void npuzzle::go_up(int choice) {
     if (choice == 2) {
         hCost = find_misplaced();
     }
+    else if (choice == 3) {
+        hCost = manhattan_distance();
+    }
 
     fCost = calc_fCost();
 }
@@ -112,6 +121,9 @@ void npuzzle::go_down(int choice) {
 
     if (choice == 2) {
         hCost = find_misplaced();
+    }
+    else if (choice == 3) {
+        hCost = manhattan_distance();
     }
 
     fCost = calc_fCost();
@@ -198,8 +210,10 @@ int npuzzle::find_misplaced() {
     int numMisplaced = 0;
     for (int i = 0; i < size; ++i) {
         for (int j = 0; j < size; ++j) {
-            if (puzzle.at(i).at(j) != goalPuzzle.at(i).at(j)) {
-                ++numMisplaced;
+            if (puzzle.at(i).at(j) != "0") {
+                if (puzzle.at(i).at(j) != goalPuzzle.at(i).at(j)) {
+                    ++numMisplaced;
+                }
             }
         }
     }
@@ -207,7 +221,37 @@ int npuzzle::find_misplaced() {
     return numMisplaced;
 }
 
+int npuzzle::manhattan_distance() {
+    int manDist = 0;
+    int total_heuristic = 0;
+    pair<int,int> goalPos;
+    
+    for (int i = 0; i < size; ++i) {
+        for (int j = 0; j < size; ++j) {
+            if (puzzle.at(i).at(j) != "0") {
+                if (puzzle.at(i).at(j) != goalPuzzle.at(i).at(j)) {
+                    goalPos = findNum(puzzle.at(i).at(j));
+                    manDist = abs(i - goalPos.first) + abs(j - goalPos.second);
 
+                    total_heuristic += manDist;
+                }
+            }
+        }
+    }
+
+    return total_heuristic;
+}
+
+
+pair<int,int> npuzzle::findNum(string goalNum){
+    for (int i = 0; i < size; ++i) {
+        for (int j = 0; j < size; ++j) {
+            if (goalPuzzle.at(i).at(j) == goalNum) {
+                return make_pair(i,j);
+            }
+        }
+    }
+}
 
 void npuzzle::expand(priority_queue<npuzzle>& pq, int choice) {
     npuzzle moveRight = pq.top();
@@ -301,6 +345,35 @@ void npuzzle::misplaced(priority_queue<npuzzle>& pq, vector<npuzzle>& visited) {
     }
 }
 
-// void npuzzle::manhattan(priority_queue<npuzzle>& pq, vector<npuzzle>& visited){
+void npuzzle::manhattan(priority_queue<npuzzle>& pq, vector<npuzzle>& visited){
+int choice = 3;
+    while (!pq.empty()) {
+        npuzzle curr = pq.top();
+        bool found = false;
 
-// }
+        if (curr.isGoal() == false) {
+            expand(pq, choice);
+            for (int i = 0; i < visited.size(); ++i) {
+                if (curr.puzzle == visited.at(i).puzzle) {
+                    if (curr.fCost < visited.at(i).fCost) {
+                        swap(visited.at(i), curr);
+                        found = true;
+                        break;
+                    }
+                    else {
+                        found = true;
+                        break;
+                    }
+                }
+            }
+            if (found == false) {
+                visited.push_back(curr);
+            }
+        }
+        else {
+            cout << "You've reached your goal!" << endl;
+            curr.print_puzzle();
+            break;
+        }
+    }
+}

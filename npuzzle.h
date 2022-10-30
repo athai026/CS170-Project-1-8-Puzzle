@@ -41,12 +41,12 @@ class npuzzle {
         const int get_fCost() const;
         int calc_fCost();
         int find_misplaced();
-        // int manhattan_distance();
-        // pair<int,int> findNum(string);
+        int manhattan_distance();
+        pair<int,int> findNum(string);
         void expand(priority_queue<npuzzle>&, int);
         void uniformCost(priority_queue<npuzzle>&, vector<npuzzle>&);
         void misplaced(priority_queue<npuzzle>&, vector<npuzzle>&);
-        // void manhattan(priority_queue<npuzzle>&, vector<npuzzle>&);
+        void manhattan(priority_queue<npuzzle>&, vector<npuzzle>&);
 
         bool operator<(const npuzzle& rhs) const {
             return this->get_fCost() > rhs.get_fCost();
