@@ -39,6 +39,7 @@ class npuzzle {
         const int get_gCost() const;
         const int get_hCost() const;
         const int get_fCost() const;
+        void expand(priority_queue<npuzzle>&);
         void uniformCost(priority_queue<npuzzle>&, vector<npuzzle>&);
         // void misplaced(priority_queue<npuzzle>, vector<npuzzle>&);
         // void manhattan(priority_queue<npuzzle>, vector<npuzzle>&);
