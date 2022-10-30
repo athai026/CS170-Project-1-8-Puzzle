@@ -25,10 +25,10 @@ class npuzzle {
         npuzzle(vector<vector<string>>, int);
         npuzzle(const npuzzle&); //copy constructor
         ~npuzzle();
-        void go_right();
-        void go_left();
-        void go_up();
-        void go_down();
+        void go_right(int);
+        void go_left(int);
+        void go_up(int);
+        void go_down(int);
         bool check_right();
         bool check_left();
         bool check_down();
@@ -39,10 +39,14 @@ class npuzzle {
         const int get_gCost() const;
         const int get_hCost() const;
         const int get_fCost() const;
-        void expand(priority_queue<npuzzle>&);
+        int calc_fCost();
+        int find_misplaced();
+        // int manhattan_distance();
+        // pair<int,int> findNum(string);
+        void expand(priority_queue<npuzzle>&, int);
         void uniformCost(priority_queue<npuzzle>&, vector<npuzzle>&);
-        // void misplaced(priority_queue<npuzzle>, vector<npuzzle>&);
-        // void manhattan(priority_queue<npuzzle>, vector<npuzzle>&);
+        void misplaced(priority_queue<npuzzle>&, vector<npuzzle>&);
+        // void manhattan(priority_queue<npuzzle>&, vector<npuzzle>&);
 
         bool operator<(const npuzzle& rhs) const {
             return this->get_fCost() > rhs.get_fCost();

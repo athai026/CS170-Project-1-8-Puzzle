@@ -61,9 +61,9 @@ int main() {
     if (choice == 1) {
         newPuzzle.uniformCost(pq, visited);
     }
-    // else if (choice == 2) {
-    //     newPuzzle.misplaced(pq, visited);
-    // }
+    else if (choice == 2) {
+        newPuzzle.misplaced(pq, visited);
+    }
     // else if (choice == 3) {
     //     newPuzzle.manhattan(pq, visited);
     // }

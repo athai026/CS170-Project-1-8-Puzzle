@@ -57,44 +57,64 @@ npuzzle::~npuzzle() {
     }*/
 }
 
-void npuzzle::go_right() {
+void npuzzle::go_right(int choice) {
     int i = blank_loc.first;
     int j = blank_loc.second;
     
     swap(puzzle.at(i).at(j), puzzle.at(i).at(j + 1));
     blank_loc.second += 1;
     ++gCost;
-    ++fCost;
+
+    if (choice == 2) {
+        hCost = find_misplaced();
+    }
+
+    fCost = calc_fCost();
 }
 
-void npuzzle::go_left() {
+void npuzzle::go_left(int choice) {
     int i = blank_loc.first;
     int j = blank_loc.second;
     
     swap(puzzle.at(i).at(j), puzzle.at(i).at(j - 1));
     blank_loc.second -= 1;
     ++gCost;
-    ++fCost;
+
+    if (choice == 2) {
+        hCost = find_misplaced();
+    }
+
+    fCost = calc_fCost();
 }
 
-void npuzzle::go_up() {
+void npuzzle::go_up(int choice) {
     int i = blank_loc.first;
     int j = blank_loc.second;
 
     swap(puzzle.at(i).at(j), puzzle.at(i - 1).at(j));
     blank_loc.first -= 1;
     ++gCost;
-    ++fCost;
+    
+    if (choice == 2) {
+        hCost = find_misplaced();
+    }
+
+    fCost = calc_fCost();
 }
 
-void npuzzle::go_down() {
+void npuzzle::go_down(int choice) {
     int i = blank_loc.first;
     int j = blank_loc.second;
 
     swap(puzzle.at(i).at(j), puzzle.at(i + 1).at(j));
     blank_loc.first += 1;
     ++gCost;
-    ++fCost;
+
+    if (choice == 2) {
+        hCost = find_misplaced();
+    }
+
+    fCost = calc_fCost();
 }
 
 bool npuzzle::check_right() {
@@ -170,37 +190,59 @@ const int npuzzle::get_fCost() const {
     return fCost;
 }
 
-void npuzzle::expand(priority_queue<npuzzle>& pq) {
+int npuzzle::calc_fCost() {
+    return this->gCost + this->hCost;
+}
+
+int npuzzle::find_misplaced() {
+    int numMisplaced = 0;
+    for (int i = 0; i < size; ++i) {
+        for (int j = 0; j < size; ++j) {
+            if (puzzle.at(i).at(j) != goalPuzzle.at(i).at(j)) {
+                ++numMisplaced;
+            }
+        }
+    }
+
+    return numMisplaced;
+}
+
+
+
+void npuzzle::expand(priority_queue<npuzzle>& pq, int choice) {
     npuzzle moveRight = pq.top();
     npuzzle moveLeft = pq.top();
     npuzzle moveUp = pq.top();
     npuzzle moveDown = pq.top();
 
+    pq.pop();
+
     if (moveRight.check_right()) {
-        moveRight.go_right();
+        moveRight.go_right(choice);
         pq.push(moveRight);
     }
     if (moveLeft.check_left()) {
-        moveLeft.go_left();
+        moveLeft.go_left(choice);
         pq.push(moveLeft);
     }
     if (moveDown.check_down()) {
-        moveDown.go_down();
+        moveDown.go_down(choice);
         pq.push(moveDown);
     }
     if (moveUp.check_up()) {
-        moveUp.go_up();
+        moveUp.go_up(choice);
         pq.push(moveUp);
     }
 }
 
 void npuzzle::uniformCost(priority_queue<npuzzle>& pq, vector<npuzzle>& visited) {
+    int choice = 1;
     while (!pq.empty()) {
         npuzzle curr = pq.top();
         bool found = false;
 
         if (curr.isGoal() == false) {
-            expand(pq);
+            expand(pq, choice);
             for (int i = 0; i < visited.size(); ++i) {
                 if (curr.puzzle == visited.at(i).puzzle) {
                     if (curr.fCost < visited.at(i).fCost) {
@@ -217,7 +259,6 @@ void npuzzle::uniformCost(priority_queue<npuzzle>& pq, vector<npuzzle>& visited)
             if (found == false) {
                 visited.push_back(curr);
             }
-            pq.pop();
         }
         else {
             cout << "You've reached your goal!" << endl;
@@ -225,13 +266,41 @@ void npuzzle::uniformCost(priority_queue<npuzzle>& pq, vector<npuzzle>& visited)
             break;
         }
     }
-
 }
 
-// void npuzzle::misplaced(priority_queue<npuzzle> pq, vector<npuzzle>& visited) {
+void npuzzle::misplaced(priority_queue<npuzzle>& pq, vector<npuzzle>& visited) {
+    int choice = 2;
+    while (!pq.empty()) {
+        npuzzle curr = pq.top();
+        bool found = false;
 
-// }
+        if (curr.isGoal() == false) {
+            expand(pq, choice);
+            for (int i = 0; i < visited.size(); ++i) {
+                if (curr.puzzle == visited.at(i).puzzle) {
+                    if (curr.fCost < visited.at(i).fCost) {
+                        swap(visited.at(i), curr);
+                        found = true;
+                        break;
+                    }
+                    else {
+                        found = true;
+                        break;
+                    }
+                }
+            }
+            if (found == false) {
+                visited.push_back(curr);
+            }
+        }
+        else {
+            cout << "You've reached your goal!" << endl;
+            curr.print_puzzle();
+            break;
+        }
+    }
+}
 
-// void npuzzle::manhattan(priority_queue<npuzzle> pq, vector<npuzzle>& visited){
+// void npuzzle::manhattan(priority_queue<npuzzle>& pq, vector<npuzzle>& visited){
 
 // }
