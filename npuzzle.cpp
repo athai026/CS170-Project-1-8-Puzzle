@@ -273,7 +273,9 @@ void npuzzle::expand(priority_queue<npuzzle>& pq, int choice) {
 
 void npuzzle::search(priority_queue<npuzzle>& pq, vector<npuzzle>& visited, int choice, int& maxQueueSize) {
     while (!pq.empty()) {
+        cout << "The best state to expand with g(n) = " << pq.top().get_gCost() << " and h(n) = " << pq.top().get_hCost() << " is:" <<endl;
         npuzzle curr = pq.top();
+        curr.print_puzzle();
         bool found = false;
 
         if (curr.isGoal() == false) {
