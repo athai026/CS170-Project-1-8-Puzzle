@@ -12,7 +12,6 @@ using namespace std;
 class npuzzle {
     private:
         vector<vector<string>> puzzle;
-        // const npuzzle* prev;
         unsigned size;
         unsigned gCost;
         unsigned hCost;
@@ -44,9 +43,7 @@ class npuzzle {
         int manhattan_distance();
         pair<int,int> findNum(string);
         void expand(priority_queue<npuzzle>&, int);
-        void uniformCost(priority_queue<npuzzle>&, vector<npuzzle>&);
-        void misplaced(priority_queue<npuzzle>&, vector<npuzzle>&);
-        void manhattan(priority_queue<npuzzle>&, vector<npuzzle>&);
+        void search(priority_queue<npuzzle>&, vector<npuzzle>&, int, int&);
 
         bool operator<(const npuzzle& rhs) const {
             return this->get_fCost() > rhs.get_fCost();
@@ -64,10 +61,5 @@ class npuzzle {
             return *this;
         }
 };
-
-// bool operator<(const npuzzle& lhs, const npuzzle& rhs) {
-//     cout << "in operator<" << endl;
-//     return !(lhs.get_fCost() < rhs.get_fCost());
-// }
 
 #endif

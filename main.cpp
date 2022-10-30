@@ -1,22 +1,12 @@
 #include "./npuzzle.h"
-
-// struct compare_fCost {
-//     bool operator() (npuzzle child1, npuzzle child2) {
-//         return child1.get_fCost() > child2.get_fCost();
-//     }
-// };
-
-// bool operator<(const npuzzle& lhs, const npuzzle& rhs) {
-//     cout << "in operator<" << endl;
-//     return !(lhs.get_fCost() < rhs.get_fCost());
-// }
+#include "time.h"
+#include <iomanip>
 
 int main() {
 
     int puzzle_size;
     string puzzle_nums;
     vector<vector<string>> puzzle;
-
     cout << "input size n (nxn): ";
     cin >> puzzle_size;
 
@@ -41,54 +31,33 @@ int main() {
     int choice;
     cin >> choice;
 
+    int maxQueueSize = 0;
+
+    clock_t start, end;
+    start = clock();
+
     npuzzle newPuzzle(puzzle, puzzle_size);
     newPuzzle.print_puzzle();
-    // newPuzzle.go_right();
-    // newPuzzle.go_down();
-    // newPuzzle.go_left();
-    // newPuzzle.go_up();
-    // newPuzzle.print_puzzle();
     
-    
-    // priority_queue <npuzzle, vector<npuzzle>, compare_fCost> pq;
     priority_queue <npuzzle> pq;
     vector<npuzzle> visited;
 
-    // cout << "pushing" << endl;
-    pq.push(newPuzzle);
-    cout << "pushed initial state" << endl;
-
-    if (choice == 1) {
-        newPuzzle.uniformCost(pq, visited);
-    }
-    else if (choice == 2) {
-        newPuzzle.misplaced(pq, visited);
-    }
-    else if (choice == 3) {
-        newPuzzle.manhattan(pq, visited);
+    if (choice == 1 || choice == 2 || choice == 3) {
+        pq.push(newPuzzle);
+        newPuzzle.search(pq, visited, choice, maxQueueSize);
     }
     else {
         cout << "Invalid choice" << endl;
     }
 
-    // npuzzle test;
-    // cout << "testing queue pop" << endl;
-    // while (!pq.empty()) {
-        
-    //     test = pq.top();
-    //     test.print_puzzle();
-    //     // pq.top().print_puzzle();
-    //     // visited.push_back(test);
-    //     pq.pop();
-    // }
+    end = clock();
+    float time_elapsed = float(end - start) / float(CLOCKS_PER_SEC);
 
+    cout <<"Time elapsed: " << fixed << time_elapsed << setprecision(5) << " secs" << endl;
+    cout << "Maximum size of queue: " << maxQueueSize << endl;
     cout << "Number of nodes expanded: " << visited.size() << endl;
     cout << "Depth of solution: " << pq.top().get_gCost() << endl;
-    cout << "done" << endl;
-    
-
 
     return 0;
 }
 
-// priority_queue <npuzzle, vector<npuzzle>, greater<npuzzle.get_fCost()>> pq;

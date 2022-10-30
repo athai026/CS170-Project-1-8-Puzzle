@@ -1,7 +1,6 @@
 #include "npuzzle.h"
 
 npuzzle::npuzzle() {
-    // prev = NULL;
     size = 0;
     gCost = 0;
     hCost = 0;
@@ -16,7 +15,6 @@ npuzzle::npuzzle() {
 npuzzle::npuzzle(vector<vector<string>> in, int puzzle_size) {
     puzzle = in;
     size = puzzle_size;
-    // prev = NULL;
     gCost = 0;
     hCost = 0;
     fCost = gCost + hCost;
@@ -41,7 +39,6 @@ npuzzle::npuzzle(vector<vector<string>> in, int puzzle_size) {
 }
 
 npuzzle::npuzzle(const npuzzle& p1) {
-    // prev = &p1;    
     puzzle = p1.puzzle;
     size = p1.size;
     gCost = p1.gCost;
@@ -52,9 +49,6 @@ npuzzle::npuzzle(const npuzzle& p1) {
 }
 
 npuzzle::~npuzzle() {
-    /*if (prev != nullptr) {
-        delete prev;
-    }*/
 }
 
 void npuzzle::go_right(int choice) {
@@ -183,10 +177,8 @@ pair<int,int> npuzzle::findBlank() {
 
 bool npuzzle::isGoal() {
     if (puzzle == goalPuzzle) {
-        cout << "Congratulations!! You have the goal state" << endl;
         return true;
     }
-    cout << "not goal state. keep going" << endl;
     return false;
 }
 
@@ -279,8 +271,7 @@ void npuzzle::expand(priority_queue<npuzzle>& pq, int choice) {
     }
 }
 
-void npuzzle::uniformCost(priority_queue<npuzzle>& pq, vector<npuzzle>& visited) {
-    int choice = 1;
+void npuzzle::search(priority_queue<npuzzle>& pq, vector<npuzzle>& visited, int choice, int& maxQueueSize) {
     while (!pq.empty()) {
         npuzzle curr = pq.top();
         bool found = false;
@@ -303,71 +294,9 @@ void npuzzle::uniformCost(priority_queue<npuzzle>& pq, vector<npuzzle>& visited)
             if (found == false) {
                 visited.push_back(curr);
             }
-        }
-        else {
-            cout << "You've reached your goal!" << endl;
-            curr.print_puzzle();
-            break;
-        }
-    }
-}
-
-void npuzzle::misplaced(priority_queue<npuzzle>& pq, vector<npuzzle>& visited) {
-    int choice = 2;
-    while (!pq.empty()) {
-        npuzzle curr = pq.top();
-        bool found = false;
-
-        if (curr.isGoal() == false) {
-            expand(pq, choice);
-            for (int i = 0; i < visited.size(); ++i) {
-                if (curr.puzzle == visited.at(i).puzzle) {
-                    if (curr.fCost < visited.at(i).fCost) {
-                        swap(visited.at(i), curr);
-                        found = true;
-                        break;
-                    }
-                    else {
-                        found = true;
-                        break;
-                    }
-                }
-            }
-            if (found == false) {
-                visited.push_back(curr);
-            }
-        }
-        else {
-            cout << "You've reached your goal!" << endl;
-            curr.print_puzzle();
-            break;
-        }
-    }
-}
-
-void npuzzle::manhattan(priority_queue<npuzzle>& pq, vector<npuzzle>& visited){
-int choice = 3;
-    while (!pq.empty()) {
-        npuzzle curr = pq.top();
-        bool found = false;
-
-        if (curr.isGoal() == false) {
-            expand(pq, choice);
-            for (int i = 0; i < visited.size(); ++i) {
-                if (curr.puzzle == visited.at(i).puzzle) {
-                    if (curr.fCost < visited.at(i).fCost) {
-                        swap(visited.at(i), curr);
-                        found = true;
-                        break;
-                    }
-                    else {
-                        found = true;
-                        break;
-                    }
-                }
-            }
-            if (found == false) {
-                visited.push_back(curr);
+            
+            if (visited.size() > maxQueueSize) {
+                maxQueueSize = pq.size();
             }
         }
         else {
