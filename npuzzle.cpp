@@ -153,10 +153,14 @@ bool npuzzle::check_up(){
 
 void npuzzle::print_puzzle() const {
     for (int i=  0; i < size; ++i) {
+        cout << "[";
         for (int j = 0; j < size; ++j) {
-            cout << puzzle.at(i).at(j) << " ";
+            cout << puzzle.at(i).at(j);
+            if (j != size - 1) {
+                cout << ",";
+            }
         }
-        cout << endl;
+        cout << "]" << endl;
     }
     cout << endl;
 }
