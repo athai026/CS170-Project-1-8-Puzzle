@@ -277,8 +277,19 @@ void npuzzle::expand(priority_queue<npuzzle>& pq, int choice) {
 
 void npuzzle::search(priority_queue<npuzzle>& pq, vector<npuzzle>& visited, int choice, int& maxQueueSize) {
     while (!pq.empty()) {
-        cout << "The best state to expand with a g(n) = " << pq.top().get_gCost() << " and h(n) = " << pq.top().get_hCost() << " is:" <<endl;
         npuzzle curr = pq.top();
+        if (pq.size() == 1) {
+            if (choice == 2) {
+                curr.hCost = find_misplaced();
+                curr.fCost = calc_fCost();
+            }
+            else if (choice == 3) {
+                curr.hCost = manhattan_distance();
+                curr.fCost = calc_fCost();
+            }
+        }
+
+        cout << "The best state to expand with a g(n) = " << curr.get_gCost() << " and h(n) = " << curr.get_hCost() << " is:" <<endl;
         curr.print_puzzle();
         bool found = false;
 
