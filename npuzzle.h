@@ -44,6 +44,7 @@ class npuzzle {
         pair<int,int> findNum(string);
         void expand(priority_queue<npuzzle>&, int);
         void search(priority_queue<npuzzle>&, vector<npuzzle>&, int, int&);
+            //all functions use same search function since the only diff is h(n) calculations
 
         bool operator<(const npuzzle& rhs) const {
             return this->get_fCost() > rhs.get_fCost();

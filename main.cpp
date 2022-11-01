@@ -34,7 +34,7 @@ int main() {
     int maxQueueSize = 0;
 
     clock_t start, end;
-    start = clock();
+    start = clock(); //begin "timer"
 
     npuzzle newPuzzle(puzzle, puzzle_size);
     newPuzzle.print_puzzle();
@@ -44,14 +44,14 @@ int main() {
 
     if (choice == 1 || choice == 2 || choice == 3) {
         pq.push(newPuzzle);
-        newPuzzle.search(pq, visited, choice, maxQueueSize);
+        newPuzzle.search(pq, visited, choice, maxQueueSize); 
     }
     else {
         cout << "Invalid choice" << endl;
     }
 
-    end = clock();
-    float time_elapsed = float(end - start) / float(CLOCKS_PER_SEC);
+    end = clock(); //end "timer"
+    float time_elapsed = float(end - start) / float(CLOCKS_PER_SEC); //divide by CLOCKS_PER_SEC to convert into seconds
 
     cout <<"Time elapsed: " << fixed << time_elapsed << setprecision(5) << " secs" << endl;
     cout << "Maximum size of queue: " << maxQueueSize << endl;

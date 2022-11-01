@@ -51,6 +51,7 @@ npuzzle::npuzzle(const npuzzle& p1) {
 npuzzle::~npuzzle() {
 }
 
+//operators (move right, left, up, or down)
 void npuzzle::go_right(int choice) {
     int i = blank_loc.first;
     int j = blank_loc.second;
@@ -59,7 +60,7 @@ void npuzzle::go_right(int choice) {
     blank_loc.second += 1;
     ++gCost;
 
-    if (choice == 2) {
+    if (choice == 2) {                  //if algorithm chose is not UCS, calc appropriate h(n)
         hCost = find_misplaced();
     }
     else if (choice == 3) {
@@ -77,7 +78,7 @@ void npuzzle::go_left(int choice) {
     blank_loc.second -= 1;
     ++gCost;
 
-    if (choice == 2) {
+    if (choice == 2) {                  //if algorithm chose is not UCS, calc appropriate h(n)
         hCost = find_misplaced();
     }
     else if (choice == 3) {
@@ -95,7 +96,7 @@ void npuzzle::go_up(int choice) {
     blank_loc.first -= 1;
     ++gCost;
     
-    if (choice == 2) {
+    if (choice == 2) {                  //if algorithm chose is not UCS, calc appropriate h(n)
         hCost = find_misplaced();
     }
     else if (choice == 3) {
@@ -113,7 +114,7 @@ void npuzzle::go_down(int choice) {
     blank_loc.first += 1;
     ++gCost;
 
-    if (choice == 2) {
+    if (choice == 2) {                  //if algorithm chose is not UCS, calc appropriate h(n)
         hCost = find_misplaced();
     }
     else if (choice == 3) {
@@ -123,6 +124,7 @@ void npuzzle::go_down(int choice) {
     fCost = calc_fCost();
 }
 
+//making sure moves are valid
 bool npuzzle::check_right() {
     if (blank_loc.second != size - 1) {
         return true;
@@ -165,6 +167,7 @@ void npuzzle::print_puzzle() const {
     cout << endl;
 }
 
+//to find coordinate of the blank square
 pair<int,int> npuzzle::findBlank() {
     pair<int,int> blank = make_pair(-1,-1);
     for (int i = 0; i < size; ++i) {
@@ -202,6 +205,7 @@ int npuzzle::calc_fCost() {
     return this->gCost + this->hCost;
 }
 
+//count number of misplaced tiles for A* w/ misplaced tile heuristic
 int npuzzle::find_misplaced() {
     int numMisplaced = 0;
     for (int i = 0; i < size; ++i) {
@@ -217,6 +221,8 @@ int npuzzle::find_misplaced() {
     return numMisplaced;
 }
 
+//calc manhattan distance for A* w/ manhattan distance heuristic
+//finds where the misplaced tile should be and calculates distance to it
 int npuzzle::manhattan_distance() {
     int manDist = 0;
     int total_heuristic = 0;
@@ -238,7 +244,8 @@ int npuzzle::manhattan_distance() {
     return total_heuristic;
 }
 
-
+//used in conjunction with manhattan_distance
+//returns the coordinate of where misplaced tile should be
 pair<int,int> npuzzle::findNum(string goalNum){
     for (int i = 0; i < size; ++i) {
         for (int j = 0; j < size; ++j) {
@@ -249,6 +256,7 @@ pair<int,int> npuzzle::findNum(string goalNum){
     }
 }
 
+//expands node by applying all possible operators and pushing onto pq
 void npuzzle::expand(priority_queue<npuzzle>& pq, int choice) {
     npuzzle moveRight = pq.top();
     npuzzle moveLeft = pq.top();
